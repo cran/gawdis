@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Francesco de Bello (fradebello@ext.uv.es), Zoltan Botta-Dukat, Pavel Fibich" />
+
+
+<title>Guidelines for the function gawdis</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      code.sourceCode > span { display: inline-block; line-height: 1.25; }
+  code.sourceCode > span { color: inherit; text-decoration: inherit; }
+  code.sourceCode > span:empty { height: 1.2em; }
+  .sourceCode { overflow: visible; }
+  code.sourceCode { white-space: pre; position: relative; }
+  div.sourceCode { margin: 1em 0; }
+  pre.sourceCode { margin: 0; }
+  @media screen {
+  div.sourceCode { overflow: auto; }
+  }
+  @media print {
+  code.sourceCode { white-space: pre-wrap; }
+  code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+  }
+  pre.numberSource code
+    { counter-reset: source-line 0; }
+  pre.numberSource code > span
+    { position: relative; left: -4em; counter-increment: source-line; }
+  pre.numberSource code > span > a:first-child::before
+    { content: counter(source-line);
+      position: relative; left: -1em; text-align: right; vertical-align: baseline;
+      border: none; display: inline-block;
+      -webkit-touch-callout: none; -webkit-user-select: none;
+      -khtml-user-select: none; -moz-user-select: none;
+      -ms-user-select: none; user-select: none;
+      padding: 0 4px; width: 4em;
+      color: #aaaaaa;
+    }
+  pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+  div.sourceCode
+    {   }
+  @media screen {
+  code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+  }
+  code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+  code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+  code span.at { color: #7d9029; } /* Attribute */
+  code span.bn { color: #40a070; } /* BaseN */
+  code span.bu { } /* BuiltIn */
+  code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+  code span.ch { color: #4070a0; } /* Char */
+  code span.cn { color: #880000; } /* Constant */
+  code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+  code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+  code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+  code span.dt { color: #902000; } /* DataType */
+  code span.dv { color: #40a070; } /* DecVal */
+  code span.er { color: #ff0000; font-weight: bold; } /* Error */
+  code span.ex { } /* Extension */
+  code span.fl { color: #40a070; } /* Float */
+  code span.fu { color: #06287e; } /* Function */
+  code span.im { } /* Import */
+  code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+  code span.op { color: #666666; } /* Operator */
+  code span.ot { color: #007020; } /* Other */
+  code span.pp { color: #bc7a00; } /* Preprocessor */
+  code span.sc { color: #4070a0; } /* SpecialChar */
+  code span.ss { color: #bb6688; } /* SpecialString */
+  code span.st { color: #4070a0; } /* String */
+  code span.va { color: #19177c; } /* Variable */
+  code span.vs { color: #4070a0; } /* VerbatimString */
+  code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Guidelines for the function <em>gawdis</em></h1>
+<h4 class="author">Francesco de Bello (<a href="mailto:fradebello@ext.uv.es" class="email">fradebello@ext.uv.es</a>), Zoltan Botta-Dukat, Pavel Fibich</h4>
+<h4 class="date">9.10.2020</h4>
+
+
+
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>In this step-by-step guide we will look how the function <code>gawdis</code> works and to apply it using simple data (either available in the FD package or made up below). The function <code>gawdis</code>, designed by Pavel Fibich, is an extension of the classic function <code>gowdis</code> in the package FD (Laliberté, Legendre and Shipley 2014). The function computes dissimilarity between units, usually species, based on multiple types of variables (e.g. quantitative, categorical etc.), usually species’ traits. Hence it can normally be applied to compute multi-trait dissimilarity between species in functional trait ecology studies, but it can be used in other applications as well. The dissimilarity obtained can be computed in order to attain a quasi-identical contribution of individual variables (e.g. traits) or group of associated variables (on variables reflecting similar information, e.g. multiple leaf traits). The dissimilarity is computed by either an analytical approach or through iterations. The function borrows several arguments from <code>gowdis</code>, with additional ones described below. This includes the option to consider fuzzy and dummy variables (e.g. multiple columns defining a single trait).</p>
+<p>Let’s first load functions.</p>
+</div>
+<div id="loading-functions" class="section level3">
+<h3>Loading functions</h3>
+<p>We will now open the package FD, which you should install on your computer, and the object “gawdis.R” which contains the function <code>gawdis</code>. Remember to have the file “gawdis.R” in your working directory!</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(gawdis)</span></code></pre></div>
+<pre><code>## Loading required package: FD</code></pre>
+<pre><code>## Loading required package: ade4</code></pre>
+<pre><code>## Loading required package: ape</code></pre>
+<pre><code>## Loading required package: geometry</code></pre>
+<pre><code>## Loading required package: vegan</code></pre>
+<pre><code>## Loading required package: permute</code></pre>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## This is vegan 2.5-6</code></pre>
+<pre><code>## Loading required package: GA</code></pre>
+<pre><code>## Loading required package: foreach</code></pre>
+<pre><code>## Loading required package: iterators</code></pre>
+<pre><code>## Package &#39;GA&#39; version 3.2
+## Type &#39;citation(&quot;GA&quot;)&#39; for citing this R package in publications.</code></pre>
+<pre><code>## 
+## Attaching package: &#39;GA&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:utils&#39;:
+## 
+##     de</code></pre>
+</div>
+<div id="the-gower-distance" class="section level3">
+<h3>The Gower distance</h3>
+<p>We will start now by looking what the function does, overall. To do this let’s first look at the original function <code>gawdis</code> with the data <code>dummy$trait</code>, which includes invented data for few species and their traits, available in the FD package (gawdis source the FD package).</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>dummy<span class="op">$</span>trait</span></code></pre></div>
+<pre><code>##     num1 num2 fac1 fac2 ord1 ord2 bin1 bin2
+## sp1  9.0  4.5    A    X    3    2    0    1
+## sp2  8.1  6.0    A    Z &lt;NA&gt;    1    0    1
+## sp3   NA  2.3    C    Y    5    3    1    1
+## sp4  3.2  5.4    B    Z    1    7    0    0
+## sp5  5.8  1.2    C    X    2    6   NA    0
+## sp6  3.4  8.5    C    Y    2    1    1    1
+## sp7  7.5  2.1    B    X    3    2    1    0
+## sp8  4.3  6.5 &lt;NA&gt;    Z    1    3    0    1</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>ex1 &lt;-<span class="st"> </span><span class="kw">gowdis</span>(dummy<span class="op">$</span>trait)</span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="kw">round</span>(ex1, <span class="dv">3</span>)<span class="co">##just to see only 3 decimals, enough</span></span></code></pre></div>
+<pre><code>##       sp1   sp2   sp3   sp4   sp5   sp6   sp7
+## sp2 0.218                                    
+## sp3 0.524 0.668                              
+## sp4 0.674 0.561 0.823                        
+## sp5 0.529 0.815 0.486 0.484                  
+## sp6 0.610 0.593 0.278 0.707 0.607            
+## sp7 0.448 0.686 0.485 0.558 0.302 0.619      
+## sp8 0.407 0.204 0.596 0.239 0.559 0.447 0.703</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">class</span>(ex1)</span></code></pre></div>
+<pre><code>## [1] &quot;dist&quot;</code></pre>
+<p>The data <code>dummy$trait</code> include trait information for 8 species. Some traits are numerical (num1 and num2), some are categorical, i.e. factors (fac1 and fac2, nice names btw.), some semi-quantitative traits, i.e. ordinal traits (ord1 and ord2) and some binary traits (bin1 and bin2). Some traits have NA values. The function <code>gawdis</code> computes the dissimilarity between the 8 species in the <code>dummy$trait</code>, based on all traits available. The function returns a ‘triangular’ distance object, of class <code>dist</code>, which express the (multi-traits) dissimilarity between each pair of species. Value are a scaled between 0 (species are exactly the same) and 1 (species are completely different).</p>
+<p>Let’s make even a simpler example, by taking only two traits (num2 and bin2) without NA. Let’s see exactly what <code>gawdis</code> is doing. First a dissimilarity is computed for each trait. For the <em>quantitative trait</em> the differences in values between each pair of species are scaled to a maximum value 1, by dividing the dissimilarity values to the maximum possible difference for this trait. For example, when we looked at <code>dummy$trait</code> above, we would see that the sp6 had the highest value for num2 (i.e. 8.5) and sp7 had the lowest (i.e. 2.1). The difference between these two species will be equal to 1. For <em>binary trait</em> (e.g. if a species fly or not, 1 vs. 0), the maximum value is 1, so that there is no need to make such a standardization. Finally, the dissimilarity of the two traits is simply the <em>average of the distances for each individual trait</em>.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>distance.num2&lt;-<span class="kw">dist</span>(dummy<span class="op">$</span>trait[, <span class="st">&quot;num2&quot;</span>, <span class="dt">drop=</span>F])<span class="op">/</span><span class="kw">max</span>(<span class="kw">dist</span>(dummy<span class="op">$</span>trait<span class="op">$</span>num2))<span class="co">#note the drop=F not to loose the species names in the process#</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="kw">round</span>(distance.num2, <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##       sp1   sp2   sp3   sp4   sp5   sp6   sp7
+## sp2 0.205                                    
+## sp3 0.301 0.507                              
+## sp4 0.123 0.082 0.425                        
+## sp5 0.452 0.658 0.151 0.575                  
+## sp6 0.548 0.342 0.849 0.425 1.000            
+## sp7 0.329 0.534 0.027 0.452 0.123 0.877      
+## sp8 0.274 0.068 0.575 0.151 0.726 0.274 0.603</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>distance.bin2&lt;-<span class="kw">dist</span>(dummy<span class="op">$</span>trait<span class="op">$</span>bin2)</span>
+<span id="cb24-2"><a href="#cb24-2"></a>distance.bin2</span></code></pre></div>
+<pre><code>##   1 2 3 4 5 6 7
+## 2 0            
+## 3 0 0          
+## 4 1 1 1        
+## 5 1 1 1 0      
+## 6 0 0 0 1 1    
+## 7 1 1 1 0 0 1  
+## 8 0 0 0 1 1 0 1</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>distance.twotraits.byhand&lt;-(distance.num2<span class="op">+</span>distance.bin2)<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>distance.twotraits.gowdis&lt;-<span class="kw">gowdis</span>(dummy<span class="op">$</span>trait[, <span class="kw">c</span>(<span class="st">&quot;num2&quot;</span>, <span class="st">&quot;bin2&quot;</span>)])</span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="kw">plot</span>(distance.twotraits.gowdis, distance.twotraits.byhand)</span>
+<span id="cb26-4"><a href="#cb26-4"></a><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>These simple steps show what the function <code>gawdis</code> does “automatically” for us. Notice that, for the categorical trait the process is similar as for the binary traits. If the species belong to the same category, then the dissimilarity=0, if they belong to different categories, then the dissimilarity=1. For example:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>dummy<span class="op">$</span>trait<span class="op">$</span>fac2</span></code></pre></div>
+<pre><code>## [1] X Z Y Z X Y X Z
+## Levels: X Y Z</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">gowdis</span>(dummy<span class="op">$</span>trait[, <span class="st">&quot;fac2&quot;</span>, <span class="dt">drop=</span>F])<span class="co">#notice that gowdis wants a matrix, not a vector, here a simple solution to solve this and keep species names</span></span></code></pre></div>
+<pre><code>##     sp1 sp2 sp3 sp4 sp5 sp6 sp7
+## sp2   1                        
+## sp3   1   1                    
+## sp4   1   0   1                
+## sp5   0   1   1   1            
+## sp6   1   1   0   1   1        
+## sp7   0   1   1   1   0   1    
+## sp8   1   0   1   0   1   1   1</code></pre>
+<p>You can see that sp1 and sp2 have different categories (X and Z), so the dissimilarity is=1.</p>
+</div>
+<div id="traits-contribution-and-trait-weight" class="section level3">
+<h3>Traits contribution and trait weight</h3>
+<p>Let’s now see why we actually need the new function <code>gawdis</code>, in addition to the traditional <code>gowdis</code>. In the example above <code>distance.twotraits.gowdis</code> reflects the dissimilarity of both traits, i.e. multi-trait dissimilarity, while <code>distance.num2</code> and <code>distance.bin2</code> reflect the dissimilarity for individual traits. What is the <em>contribution</em> of each single trait to the multi-trait dissimilarity? how much each single trait contribute to the final multi-trait dissimilarity? to answer this we can do, for example, a correlation between the multi-trait dissimilarity with the individual trait dissimilarity:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">cor</span>(distance.twotraits.gowdis, distance.num2)</span></code></pre></div>
+<pre><code>## [1] 0.5167754</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="kw">cor</span>(distance.twotraits.gowdis, distance.bin2)</span></code></pre></div>
+<pre><code>## [1] 0.8985725</code></pre>
+<p>This tells you how much the multi-trait dissimilarity reflects the information of each individual trait. If we look at this example we can see that the binary trait (bin2) is much more correlated to the multi-trait dissimilarity than the quantitative trait (num2), Pearson R=0.89 for the binary trait and R=0.51 for the quantitative. This means that the <em>contribution</em> of the binary trait is much much greater than of the quantitative trait. By the way, categorical/nominal traits will work similarly to binary traits, in general terms.</p>
+<p>Are we happy with this result? are we happy that when we combine different variables (traits in this case), the multivariable dissimilarity has a far greater contribution from some variables? We think it is rather fair to say that this is not an ideal solution. Luckily the <code>gawdis</code> has an useful argument <code>w</code>, or <em>weight</em> which we can use to modify the contribution of each trait. Remember that the multi-trait dissimilarity is, by default with <code>gawdis</code>, a simple average of the dissimilarity from individual traits. Instead of doing a simple average, we could do a <em>weighted average</em>, in which some traits could have bigger weights. For example, we could reduce to the weight of the binary trait, to reduce its contribution to the multi-trait dissimilarity, and increase the one for the quantitative trait. In the next lines we show how this can be done “by hand” or we could be using directly the argument <code>w</code> in <code>gowdis</code> (notice that we are trying, to start with, to give twice the weight to the binary trait, compared to the quantitative one). See both options below:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>distance.twotraits.byhand.weighted&lt;-<span class="fl">0.67</span><span class="op">*</span>(distance.num2)<span class="op">+</span><span class="fl">0.33</span><span class="op">*</span>(distance.bin2)</span>
+<span id="cb35-2"><a href="#cb35-2"></a>distance.twotraits.gowdis.weighted&lt;-<span class="kw">gowdis</span>(dummy<span class="op">$</span>trait[, <span class="kw">c</span>(<span class="st">&quot;num2&quot;</span>, <span class="st">&quot;bin2&quot;</span>)], <span class="dt">w=</span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb35-3"><a href="#cb35-3"></a><span class="kw">plot</span>(distance.twotraits.byhand.weighted, distance.twotraits.gowdis.weighted)</span>
+<span id="cb35-4"><a href="#cb35-4"></a><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>By doing this the new multi-trait dissimilarity will be more evenly affected by each trait.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="kw">cor</span>(distance.twotraits.gowdis.weighted, distance.num2)</span></code></pre></div>
+<pre><code>## [1] 0.7454126</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">cor</span>(distance.twotraits.gowdis.weighted, distance.bin2)</span></code></pre></div>
+<pre><code>## [1] 0.7300753</code></pre>
+<p>Specifically the Pearson correlation is R=0.74 for the binary trait and R=0.73 for the quantitative. This is quite even, good job! What we did is modifying the weight of each trait to modify their contribution to the multi-trait dissimilarity. Cool! But…how do we know which values we have to select for the argument <code>w</code> to allow all traits to have a similar weight? if we have only 2 traits maybe we can try various <code>w</code> values and hope to find some decent combination, and try until we find a decent combination. The thing gets more complicated if we have many traits. Moreover, as we show below there are also other cases more complicated cases.</p>
+</div>
+<div id="the-function-gawdis-basics" class="section level3">
+<h3>The function <code>gawdis</code>: basics</h3>
+<p>This is where the new function <code>gowdis</code> will get useful. The function looks for the best values for the <code>w</code> argument, to obtain an equal contribution of individual traits.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>equalcont &lt;-<span class="st"> </span><span class="kw">gawdis</span>(dummy<span class="op">$</span>trait[,<span class="kw">c</span>(<span class="st">&quot;num2&quot;</span>, <span class="st">&quot;bin2&quot;</span>)])</span></code></pre></div>
+<pre><code>## [1] &quot;Running w.type=analytic&quot;</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>equalcont</span></code></pre></div>
+<pre><code>##            sp1        sp2        sp3        sp4        sp5        sp6
+## sp2 0.13584757                                                       
+## sp3 0.19924310 0.33509067                                            
+## sp4 0.42038371 0.39321419 0.61962681                                 
+## sp5 0.63773982 0.77358739 0.43849672 0.38037319                      
+## sp6 0.36226018 0.22641261 0.56150328 0.61962681 1.00000000           
+## sp7 0.55623127 0.69207884 0.35698817 0.29886465 0.08150854 0.91849146
+## sp8 0.18113009 0.04528252 0.38037319 0.43849672 0.81886991 0.18113009
+##            sp7
+## sp2           
+## sp3           
+## sp4           
+## sp5           
+## sp6           
+## sp7           
+## sp8 0.73736137</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="kw">attr</span>(equalcont,<span class="st">&quot;correls&quot;</span>)</span></code></pre></div>
+<pre><code>##      num2      bin2 
+## 0.7377916 0.7377916</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="kw">attr</span>(equalcont,<span class="st">&quot;weights&quot;</span>)</span></code></pre></div>
+<pre><code>##      num2      bin2 
+## 0.6611248 0.3388752</code></pre>
+<p>In one step we have a computed a multi-trait dissimilarity in which the contribution of each trait (provided in output of the function, i.e. in “correls”) are basically identical. This was done by finding an ideal <code>w</code> value for each trait (provided in the output of the function, “weights”). Notice that the values are very close to the 2:1 ratio we ‘tried’ above with <code>distance.twotraits.byhand.weighted</code> and <code>distance.twotraits.gowdis.weighted</code>). Actually we ‘tried’ those values because we knew what was already the solution, but otherwise we would have spent some time really trying multiple combinations.</p>
+<p>Of course the function <code>gawdis</code> can also be used in the exact same way as the original <code>gowdis</code>. For example, if you recall the object <code>ex1</code> created above with <code>gowdis</code>, and copied again below, now we can do the same with <code>gowdis</code>, just telling that we want to have a similar weight (and hence different contribution) for the different traits. This is the defauls in <code>gowdis</code> and in <code>gawdis</code> this is set by either using w.type =“equal” or by w.type =“user” and then saying <code>W</code> is the same for all traits.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>ex1 &lt;-<span class="st"> </span><span class="kw">gowdis</span>(dummy<span class="op">$</span>trait)</span>
+<span id="cb48-2"><a href="#cb48-2"></a>ex1.gaw1 &lt;-<span class="st"> </span><span class="kw">gawdis</span>(dummy<span class="op">$</span>trait, <span class="dt">w.type =</span><span class="st">&quot;equal&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;Running w.type=equal&quot;</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>ex1.gaw2 &lt;-<span class="st"> </span><span class="kw">gawdis</span>(dummy<span class="op">$</span>trait, <span class="dt">w.type =</span><span class="st">&quot;user&quot;</span>, <span class="dt">W=</span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="dv">8</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;Running w.type=user&quot;</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="kw">plot</span>(ex1, ex1.gaw1)</span>
+<span id="cb52-2"><a href="#cb52-2"></a><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="kw">plot</span>(ex1, ex1.gaw2)</span>
+<span id="cb53-2"><a href="#cb53-2"></a><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="the-function-gawdis-analytical-vs.-iterative-approaches" class="section level3">
+<h3>The function <code>gawdis</code>: analytical vs. iterative approaches</h3>
+<p>Now that we verified that <code>gawdis</code> works fine, let’s see more more details about the function and its different applications. The solutions provided by the function can be obtained in two ways. The first one is by an analytical solution, using purely a mathematical formulas (see main paper and corresponding supplementary material). This is the approach used by default in the function, as we used to create the object <code>equalcont</code> above. In case of doubts, this approach can be set by using w.type=“analytic”. NOTE that unfortunately this solution cannot be used when there are missing values (NAs).</p>
+<p>When there are NAs, even if you set the argument w.type =“analytic” the function will apply a second approach, based on iterations, i.e. it will keep trying several solutions until finding a good one (actually it is based on a fitness improving approach, which gradually improves the output of the results). This will take some time, as multiple alternatives are tested sequentially. It can be obtained by using w.type =“optimized”. The running time will depend, mostly, on the number of species and the number of iterations, which is set by the argument <code>opti.maxiter</code>, by default set to 300. Below we apply both approach to a subset of the <code>dummy$trait data</code>, without NAs</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>analytical&lt;-<span class="kw">gawdis</span>(dummy<span class="op">$</span>trait[,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>)], <span class="dt">w.type =</span><span class="st">&quot;analytic&quot;</span>)<span class="co"># it is not needed to add the argument w.type, this is the approach used by default if not defined#</span></span></code></pre></div>
+<pre><code>## [1] &quot;Running w.type=analytic&quot;</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a><span class="kw">attr</span>(analytical, <span class="st">&quot;correls&quot;</span>)</span></code></pre></div>
+<pre><code>##      num2      fac2      ord2      bin2 
+## 0.5350139 0.5350139 0.5350139 0.5350139</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a><span class="kw">attr</span>(analytical, <span class="st">&quot;weights&quot;</span>)</span></code></pre></div>
+<pre><code>##      num2      fac2      ord2      bin2 
+## 0.2422698 0.2467646 0.3575842 0.1533815</code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a>iterations&lt;-<span class="kw">gawdis</span>(dummy<span class="op">$</span>trait[,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>)], <span class="dt">w.type =</span><span class="st">&quot;optimized&quot;</span>, <span class="dt">opti.maxiter=</span><span class="dv">100</span>)<span class="co"># here we used &#39;only&#39; 100 iterations, to speed up the process and because with such few species this is likely more than enough#</span></span></code></pre></div>
+<pre><code>## [1] &quot;Running w.type=optimized&quot;</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a><span class="kw">attr</span>(iterations, <span class="st">&quot;correls&quot;</span>)</span></code></pre></div>
+<pre><code>##      num2      fac2      ord2      bin2 
+## 0.5350345 0.5350199 0.5349875 0.5350250</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1"></a><span class="kw">attr</span>(iterations, <span class="st">&quot;weights&quot;</span>)</span></code></pre></div>
+<pre><code>##      num2      fac2      ord2      bin2 
+## 0.2422855 0.2467624 0.3575645 0.1533875</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1"></a><span class="kw">plot</span>(analytical, iterations)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Here you see some slight differences in the results, for example in terms of correlations between the dissimilarity of single traits and the multitrait (i.e. “correls”) and the weights finally used for each trait (“weights”). The final results, the dissimilarity values displayed in the plot, also vary just a tiny bit. This is because the iterations are just based on a trial-error approach, which improves with more iterations, but it might “miss” the perfect mathematical solution, and just approach very close to it. Otherwise we can be quite confident that the results using the iteration tend quite well to the ideal results.</p>
+</div>
+<div id="the-function-gawdis-grouping-traits" class="section level3">
+<h3>The function <code>gawdis</code>: grouping traits</h3>
+<p>In some cases the datasets we are considering have multiple variables which reflect some partially overlapping or redundant information. For example, many plant trait databases include a lot of leaf traits. This is the case, for example, of the dataset <code>tussock$trait</code>, also available in the FD package. Let’s have a look:</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a><span class="kw">dim</span>(tussock<span class="op">$</span>trait)</span></code></pre></div>
+<pre><code>## [1] 53 16</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1"></a><span class="kw">head</span>(tussock<span class="op">$</span>trait)</span></code></pre></div>
+<pre><code>##            growthform  height     LDMC leafN leafP leafS       SLA
+## Achi_mill  Semi basal 0.09727 163.1264   3.4 0.310 0.210 15.637656
+## Agro_capi  Semi basal 0.19100 302.7657   2.5 0.250 0.180 21.846627
+## Anth_odor     Tussock 0.06350 280.2013   2.0 0.240 0.150 24.547661
+## Apha_arve  Semi basal 0.04470 185.9606   1.7 0.290 0.180 18.587383
+## Arre_elat     Tussock 0.56400 311.9551   2.6 0.256 0.174 20.777386
+## Brac_bell Short basal 0.00338 223.5052   1.2 0.330 0.220  6.549107
+##           nutrientuptake       raunkiaer          clonality  leafsize dispersal
+## Achi_mill   Mycorrhizal      Chamaephyte Clonal belowground 313.51484      Wind
+## Agro_capi   Mycorrhizal  Hemicryptophyte Clonal belowground 141.78019      Wind
+## Anth_odor   Mycorrhizal  Hemicryptophyte               None 161.43904   Passive
+## Apha_arve   Mycorrhizal       Therophyte               None  20.89516   Passive
+## Arre_elat   Mycorrhizal  Hemicryptophyte Clonal belowground 805.42883   Passive
+## Brac_bell   Mycorrhizal  Hemicryptophyte               None 216.33835      Wind
+##           seedmass resprouting        pollination  lifespan
+## Achi_mill   0.1600         Yes Hymenoptera (bees) Perennial
+## Agro_capi   0.0580         Yes               Wind Perennial
+## Anth_odor   0.5600         Yes               Wind Perennial
+## Apha_arve   0.1590          No               Self    Annual
+## Arre_elat   2.9000         Yes               Wind Perennial
+## Brac_bell   0.0524         Yes Hymenoptera (bees) Perennial</code></pre>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1"></a><span class="kw">head</span>(tussock<span class="op">$</span>trait[, <span class="dv">3</span><span class="op">:</span><span class="dv">7</span>])</span></code></pre></div>
+<pre><code>##               LDMC leafN leafP leafS       SLA
+## Achi_mill 163.1264   3.4 0.310 0.210 15.637656
+## Agro_capi 302.7657   2.5 0.250 0.180 21.846627
+## Anth_odor 280.2013   2.0 0.240 0.150 24.547661
+## Apha_arve 185.9606   1.7 0.290 0.180 18.587383
+## Arre_elat 311.9551   2.6 0.256 0.174 20.777386
+## Brac_bell 223.5052   1.2 0.330 0.220  6.549107</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1"></a><span class="kw">cor</span>(tussock<span class="op">$</span>trait[, <span class="dv">3</span><span class="op">:</span><span class="dv">7</span>], <span class="dt">use =</span> <span class="st">&quot;complete&quot;</span>)</span></code></pre></div>
+<pre><code>##             LDMC      leafN      leafP      leafS        SLA
+## LDMC   1.0000000 -0.6848213 -0.6682552 -0.5366135 -0.6417381
+## leafN -0.6848213  1.0000000  0.6052319  0.7546005  0.6384765
+## leafP -0.6682552  0.6052319  1.0000000  0.7703387  0.6212733
+## leafS -0.5366135  0.7546005  0.7703387  1.0000000  0.5966755
+## SLA   -0.6417381  0.6384765  0.6212733  0.5966755  1.0000000</code></pre>
+<p>In the dataset there are 5 leaf traits, likely measured on the same leaves, and quite correlated between them. In this case we do suggest to create groups of traits, using the argument <code>groups</code>. Why it is so? the problem is that if many trait provide a similar information, actually all these leaf traits are very much correlated. So the information could become too prominent in the multi-trait dissimilarity. Let’s see all this, with a step-by-step approach. Basically the same test can be found in the incoming publication de Bello et al. in Methods in Ecology and Evolution. First we slightly reduce the number of traits, just for simplicity, and because the dataset included some very unbalanced categorical traits (with too few entries for a number of categories). Then we need to log-transform some of the quantitative traits, and previously we checked that height, seedmass and leafS were the one needing log-transformation. NOTE that, by the way, that if we do not use log-transformation is applied trait with abnormal trait distribution will have bigger contribution, simply because they have greater variance (see Pavoine et al. 2009 Oikos).</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1"></a>tussock.trait&lt;-tussock<span class="op">$</span>trait[, <span class="kw">c</span>(<span class="st">&quot;height&quot;</span>, <span class="st">&quot;LDMC&quot;</span>, <span class="st">&quot;leafN&quot;</span>,<span class="st">&quot;leafS&quot;</span>, <span class="st">&quot;leafP&quot;</span>, <span class="st">&quot;SLA&quot;</span>, <span class="st">&quot;seedmass&quot;</span>, <span class="st">&quot;raunkiaer&quot;</span>, <span class="st">&quot;pollination&quot;</span>, <span class="st">&quot;clonality&quot;</span>, <span class="st">&quot;growthform&quot;</span>)]</span>
+<span id="cb75-2"><a href="#cb75-2"></a>tussock.trait.log&lt;-tussock.trait<span class="co">#some traits needed log-tranformation, just creating a matrix to store the new data</span></span>
+<span id="cb75-3"><a href="#cb75-3"></a>tussock.trait.log<span class="op">$</span>height&lt;-<span class="kw">log</span>(tussock.trait<span class="op">$</span>height)</span>
+<span id="cb75-4"><a href="#cb75-4"></a>tussock.trait.log<span class="op">$</span>seedmass&lt;-<span class="kw">log</span>(tussock.trait<span class="op">$</span>seedmass)</span>
+<span id="cb75-5"><a href="#cb75-5"></a>tussock.trait.log<span class="op">$</span>leafS&lt;-<span class="kw">log</span>(tussock.trait<span class="op">$</span>leafS)</span>
+<span id="cb75-6"><a href="#cb75-6"></a><span class="kw">colnames</span>(tussock.trait.log)</span></code></pre></div>
+<pre><code>##  [1] &quot;height&quot;      &quot;LDMC&quot;        &quot;leafN&quot;       &quot;leafS&quot;       &quot;leafP&quot;      
+##  [6] &quot;SLA&quot;         &quot;seedmass&quot;    &quot;raunkiaer&quot;   &quot;pollination&quot; &quot;clonality&quot;  
+## [11] &quot;growthform&quot;</code></pre>
+<p>Let’s first compute the simple Gower distance with <code>gowdis</code>. We we will also compute the dissimilarity only on leaf traits and correlate it to the multi-trait dissimilarity:</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1"></a><span class="co">#straightgowdis&lt;-gowdis(tussock.trait.log)</span></span>
+<span id="cb77-2"><a href="#cb77-2"></a>straightgowdis<span class="fl">.2</span>&lt;-<span class="kw">gawdis</span>(tussock.trait.log, <span class="dt">w.type =</span> <span class="st">&quot;equal&quot;</span>, <span class="dt">silent =</span> T)<span class="co">#we compute &#39;normal&#39; gower with the new function because it provides more results</span></span>
+<span id="cb77-3"><a href="#cb77-3"></a><span class="co">#plot(straightgowdis, straightgowdis.2)# if you want to check that the results are the same</span></span>
+<span id="cb77-4"><a href="#cb77-4"></a>cors.gow&lt;-<span class="kw">attr</span>(straightgowdis<span class="fl">.2</span>,<span class="st">&quot;correls&quot;</span>)</span>
+<span id="cb77-5"><a href="#cb77-5"></a>cors.gow[<span class="dv">12</span>]&lt;-<span class="kw">mantel</span>(straightgowdis<span class="fl">.2</span>, <span class="kw">gowdis</span>(tussock.trait.log[, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>]), <span class="dt">na.rm=</span>T)<span class="op">$</span>statistic</span>
+<span id="cb77-6"><a href="#cb77-6"></a><span class="kw">names</span>(cors.gow)[<span class="dv">12</span>]&lt;-<span class="st">&quot;leaves&quot;</span></span>
+<span id="cb77-7"><a href="#cb77-7"></a>cors.gow</span></code></pre></div>
+<pre><code>##      height        LDMC       leafN       leafS       leafP         SLA 
+##   0.2023004   0.5083692   0.4522899   0.4944064   0.4292520   0.3729605 
+##    seedmass   raunkiaer pollination   clonality  growthform      leaves 
+##   0.2604944   0.5941643   0.4528619   0.3237053   0.4668307   0.5889437</code></pre>
+<p>We can see that the <code>heightest</code> contribution (across the <code>cors.gow</code> values) were obtained for a categorical traits, raunkier life form and the combination of leaf traits (‘leaves’). This is simply because with w.type = “equal” the multi-trait dissimilarity is an average of the dissimilarity for single traits, so leaf traits are represented 5/11 times in this average, a disproportional effect with respect to other traits, right? We could say that, although there are differences between the leaf traits, they are the same TYPE of trait, counted 5 times, when combining the traits.</p>
+<p>The problem is not solved by using PCoA analyses, as suggested by the current literature (with the idea to reduce the number of traits and synthesize correlated traits into some multivariate axis). Here is a clear example:</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1"></a>testpcoa&lt;-<span class="kw">dbFD</span>(<span class="kw">cailliez</span>(straightgowdis<span class="fl">.2</span>), tussock<span class="op">$</span>abun)<span class="co">###checking how many PCoA axes are retained</span></span></code></pre></div>
+<pre><code>## FRic: Dimensionality reduction was required. The last 40 PCoA axes (out of 51 in total) were removed. 
+## FRic: Quality of the reduced-space representation = 0.6098694 
+## CWM: When &#39;x&#39; is a distance matrix, CWM cannot be calculated.</code></pre>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1"></a>pcoaaxes&lt;-<span class="kw">dudi.pco</span>(<span class="kw">cailliez</span>(straightgowdis<span class="fl">.2</span>), <span class="dt">scannf =</span> <span class="ot">FALSE</span>, <span class="dt">nf =</span> <span class="dv">11</span>)</span>
+<span id="cb81-2"><a href="#cb81-2"></a>gowdis.PCoA&lt;-<span class="kw">dist</span>(pcoaaxes<span class="op">$</span>li)</span>
+<span id="cb81-3"><a href="#cb81-3"></a><span class="kw">sum</span>(pcoaaxes<span class="op">$</span>eig[<span class="dv">1</span><span class="op">:</span><span class="dv">11</span>])<span class="op">/</span><span class="kw">sum</span>(pcoaaxes<span class="op">$</span>eig)<span class="co">#how much variability the axes explain</span></span></code></pre></div>
+<pre><code>## [1] 0.6098694</code></pre>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1"></a><span class="co">#contribution of traits on the combined dissimilarity, done by hand#</span></span>
+<span id="cb83-2"><a href="#cb83-2"></a>cors.pcoa&lt;-<span class="kw">vector</span>()</span>
+<span id="cb83-3"><a href="#cb83-3"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">dim</span>(tussock.trait.log)[<span class="dv">2</span>]){</span>
+<span id="cb83-4"><a href="#cb83-4"></a>  cors.pcoa[i]&lt;-<span class="kw">mantel</span>(gowdis.PCoA, <span class="kw">gowdis</span>(<span class="kw">as.data.frame</span>(tussock.trait.log[, i])), <span class="dt">na.rm=</span>T)<span class="op">$</span>statistic</span>
+<span id="cb83-5"><a href="#cb83-5"></a>}</span>
+<span id="cb83-6"><a href="#cb83-6"></a>cors.pcoa[<span class="dv">12</span>]&lt;-<span class="kw">mantel</span>(gowdis.PCoA, <span class="kw">gowdis</span>(tussock.trait.log[, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>]), <span class="dt">na.rm=</span>T)<span class="op">$</span>statistic</span>
+<span id="cb83-7"><a href="#cb83-7"></a><span class="kw">names</span>(cors.pcoa)&lt;-<span class="kw">c</span>(<span class="kw">colnames</span>(tussock.trait.log), <span class="st">&quot;leaves&quot;</span>)<span class="co">#contributions of traits to the overall multi-trait dissimilarity</span></span>
+<span id="cb83-8"><a href="#cb83-8"></a>cors.pcoa</span></code></pre></div>
+<pre><code>##      height        LDMC       leafN       leafS       leafP         SLA 
+##   0.2167067   0.4735296   0.4298086   0.4453686   0.3826323   0.3335101 
+##    seedmass   raunkiaer pollination   clonality  growthform      leaves 
+##   0.2993358   0.5685074   0.4333025   0.3334111   0.4647386   0.5419322</code></pre>
+<p>Let’s just, for simplicity, focus only on the final result of this part. If we look at the object <code>cors.pcoa</code> we can see very similar contribution of traits, as obtained with the previous approach <code>cors.gow</code>. So, in very simplified terms, the PCoA approach does not help very much to solve the case of many redundant/correlated traits, as the correlated traits still have, altogether, a superior contribution to the overall multi-trait dissimilarity.</p>
+<p>The function <code>gawdis</code> could help, but only if we define groups. If we do not, let’s see what happen:</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1"></a>gaw.nogroups&lt;-<span class="kw">gawdis</span>(tussock.trait.log, <span class="dt">w.type =</span> <span class="st">&quot;optimized&quot;</span>, <span class="dt">opti.maxiter =</span> <span class="dv">200</span>)<span class="co">#there are NAs so the iteration approach is the only possible</span></span></code></pre></div>
+<pre><code>## [1] &quot;Running w.type=optimized&quot;</code></pre>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1"></a>cors.gaw&lt;-<span class="kw">attr</span>(gaw.nogroups,<span class="st">&quot;correls&quot;</span>)</span>
+<span id="cb87-2"><a href="#cb87-2"></a>cors.gaw[<span class="dv">12</span>]&lt;-<span class="kw">mantel</span>(gaw.nogroups, <span class="kw">gowdis</span>(<span class="kw">as.data.frame</span>(tussock.trait.log[, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>])), <span class="dt">na.rm=</span>T)<span class="op">$</span>statistic</span>
+<span id="cb87-3"><a href="#cb87-3"></a><span class="kw">names</span>(cors.gaw)[<span class="dv">12</span>]&lt;-<span class="st">&quot;leaves&quot;</span></span>
+<span id="cb87-4"><a href="#cb87-4"></a>cors.gaw</span></code></pre></div>
+<pre><code>##      height        LDMC       leafN       leafS       leafP         SLA 
+##   0.3935245   0.4174901   0.4213486   0.4178273   0.3983933   0.4075955 
+##    seedmass   raunkiaer pollination   clonality  growthform      leaves 
+##   0.4066210   0.4255175   0.4145924   0.4191281   0.4170435   0.5520502</code></pre>
+<p>Now, if we look at the <code>cors.gaw</code>, we can see the function, apparently, successfully accomplished its mission to obtain a quasi-equal contribution of each single trait. But, the solution provided this is not a good solution neither, because leaves, altogether, have a much bigger contribution that other traits (0.54 while other traits are around ~0.41). Again, the function considered each leaf trait separately, so that altogether leaf traits will have a greater contribution.</p>
+<p>A better solution can be obtained by saying that all leaf traits belong to a given group. Thus <code>gawdis</code> will first compute a dissimilarity for all leaf traits together and then try to get for this leaf-combined dissimilarity the same weight as for other traits. Let’s see it:</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1"></a><span class="kw">colnames</span>(tussock.trait.log)</span></code></pre></div>
+<pre><code>##  [1] &quot;height&quot;      &quot;LDMC&quot;        &quot;leafN&quot;       &quot;leafS&quot;       &quot;leafP&quot;      
+##  [6] &quot;SLA&quot;         &quot;seedmass&quot;    &quot;raunkiaer&quot;   &quot;pollination&quot; &quot;clonality&quot;  
+## [11] &quot;growthform&quot;</code></pre>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1"></a>gaw.groups&lt;-<span class="kw">gawdis</span>(tussock.trait.log, <span class="dt">w.type =</span> <span class="st">&quot;optimized&quot;</span>, <span class="dt">opti.maxiter =</span> <span class="dv">200</span>, <span class="dt">groups.weight=</span>T, <span class="dt">groups =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>))<span class="co">#there are NAs so the iteration approach is the only possible</span></span></code></pre></div>
+<pre><code>## [1] &quot;Running w.type=optimized on groups=c(1,2,2,2,2,2,3,4,5,6,7)&quot;
+## [1] &quot;Traits inside the group were weighted - optimized.&quot;</code></pre>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1"></a>cors.gaw.gr&lt;-<span class="kw">attr</span>(gaw.groups,<span class="st">&quot;correls&quot;</span>)</span>
+<span id="cb93-2"><a href="#cb93-2"></a>cors.gaw.gr[<span class="dv">12</span>]&lt;-<span class="kw">attr</span>(gaw.groups,<span class="st">&quot;group.correls&quot;</span>)[<span class="dv">2</span>]</span>
+<span id="cb93-3"><a href="#cb93-3"></a><span class="kw">names</span>(cors.gaw.gr)[<span class="dv">12</span>]&lt;-<span class="st">&quot;leaves&quot;</span></span>
+<span id="cb93-4"><a href="#cb93-4"></a>cors.gaw.gr</span></code></pre></div>
+<pre><code>##      height        LDMC       leafN       leafS       leafP         SLA 
+##   0.4413133   0.3859733   0.3337192   0.3302955   0.2992108   0.2801802 
+##    seedmass   raunkiaer pollination   clonality  growthform      leaves 
+##   0.4398934   0.4395749   0.4384321   0.4495194   0.4473308   0.4433404</code></pre>
+<p>Now if we look at the <code>cors.gaw.gr</code> we can see single leaf traits have lower contribution than other traits, but in combination (leaves), they have a comparable contribution! Of course it will be difficult to decide when and in which case group of traits should be defined. But we think that if traits are measured in the same organ and provide, to a good extent, some overlapping information, then they should be considered as a group.</p>
+</div>
+<div id="the-function-gawdis-fuzzing-coding-and-dummy-variables" class="section level3">
+<h3>The function <code>gawdis</code>: fuzzing coding and dummy variables</h3>
+<p>The function <code>gawdis</code> can be also useful in the case of traits coded as dummy variables or, as a specific case of this, as fuzzy variables. Let’s first create this new trait matrix, <code>tall</code>.</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1"></a>bodysize&lt;-<span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="ot">NA</span>, <span class="dv">70</span>)</span>
+<span id="cb95-2"><a href="#cb95-2"></a>carnivory&lt;-<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>,<span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb95-3"><a href="#cb95-3"></a>red&lt;-<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">0</span>, <span class="fl">0.2</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb95-4"><a href="#cb95-4"></a>yellow&lt;-<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.3</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb95-5"><a href="#cb95-5"></a>blue&lt;-<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.5</span>,<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb95-6"><a href="#cb95-6"></a>colors.fuzzy&lt;-<span class="kw">cbind</span>(red, yellow, blue)</span>
+<span id="cb95-7"><a href="#cb95-7"></a><span class="kw">names</span>(bodysize)&lt;-<span class="kw">paste</span>(<span class="st">&quot;sp&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb95-8"><a href="#cb95-8"></a><span class="kw">names</span>(carnivory)&lt;-<span class="kw">paste</span>(<span class="st">&quot;sp&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb95-9"><a href="#cb95-9"></a><span class="kw">rownames</span>(colors.fuzzy)&lt;-<span class="kw">paste</span>(<span class="st">&quot;sp&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb95-10"><a href="#cb95-10"></a>tall&lt;-<span class="kw">as.data.frame</span>(<span class="kw">cbind</span>(bodysize, carnivory, colors.fuzzy))</span>
+<span id="cb95-11"><a href="#cb95-11"></a>tall</span></code></pre></div>
+<pre><code>##     bodysize carnivory red yellow blue
+## sp1       10         1 1.0    0.0  0.0
+## sp2       20         1 0.0    1.0  0.0
+## sp3       30         0 0.5    0.0  0.5
+## sp4       40         1 0.0    0.0  1.0
+## sp5       50         0 0.2    0.3  0.5
+## sp6       NA         1 0.0    1.0  0.0
+## sp7       70         0 1.0    0.0  0.0</code></pre>
+<p>The object <code>tall</code> includes 3 traits for 7 species, <code>bodysize</code> (quantitative), <code>carnivory</code> (binary/categorical) and colour. The last one is represented by 3 columns, one for each basic colour (yellow, red, blue). For example the first species (sp1), is red, so it gets 1 in the the ‘red’ column and 0 in the others. This type of variables, defined by multiple columns is called dummy variable, and in this specific case fuzzy coding, because the value in each column can be different from 0 and 1, with the sum over the 3 columns being equal to 1. For more information see (<a href="https://www.univie.ac.at/arctictraits/traitspublic_fuzzyCoding.php" class="uri">https://www.univie.ac.at/arctictraits/traitspublic_fuzzyCoding.php</a>, <a href="https://stattrek.com/multiple-regression/dummy-variables.aspx" class="uri">https://stattrek.com/multiple-regression/dummy-variables.aspx</a>).</p>
+<p>We surely cannot apply <code>gowdis</code> to this type of matrices, because the function will “think” there is a total of 5 traits, since the matrix contains 5 columns, and will treat each of the 3 columns for colours as independent traits, resulting in a higher contribution of this single trait. Moreover the function gets a bit ‘crazy’ with this type of variables. Let’s see why. We can use, to start with, the function only on the colours traits:</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1"></a><span class="kw">round</span>(<span class="kw">gowdis</span>(tall[, <span class="dv">3</span><span class="op">:</span><span class="dv">5</span>]), <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##       sp1   sp2   sp3   sp4   sp5   sp6
+## sp2 0.667                              
+## sp3 0.333 0.667                        
+## sp4 0.667 0.667 0.333                  
+## sp5 0.533 0.467 0.200 0.333            
+## sp6 0.667 0.000 0.667 0.667 0.467      
+## sp7 0.000 0.667 0.333 0.667 0.533 0.667</code></pre>
+<p>We can appreciate that these results are not correct. Species 1 (sp1) was red, Species 2 was yellow. If for simplicity we think that each column means a completely different color, then we do expect the dissimilarity between these two species should be equal to 1. This was not the case. Similarly sp3 is half red and so the dissimilarity with sp1 should equal to 0.5. But this is not the case. What can we do to solve this? Do simply the following, i.e. divide the dissimilarity by the maximum dissimilarity value:</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1"></a><span class="kw">round</span>(<span class="kw">gowdis</span>(tall[, <span class="dv">3</span><span class="op">:</span><span class="dv">5</span>])<span class="op">/</span><span class="kw">max</span>(<span class="kw">gowdis</span>(tall[, <span class="dv">3</span><span class="op">:</span><span class="dv">5</span>])), <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##     sp1 sp2 sp3 sp4 sp5 sp6
+## sp2 1.0                    
+## sp3 0.5 1.0                
+## sp4 1.0 1.0 0.5            
+## sp5 0.8 0.7 0.3 0.5        
+## sp6 1.0 0.0 1.0 1.0 0.7    
+## sp7 0.0 1.0 0.5 1.0 0.8 1.0</code></pre>
+<p>So if we want to combine this trait (color, defined by 3 columns in the <code>tall</code>), we need first to compute the dissimilarity for color this way, and then combine it with the other traits, for example with an average. For example, if we want a simple average of the dissimilarity for the 3 traits:</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1"></a>dissim.bodysize&lt;-<span class="kw">gowdis</span>(tall[, <span class="st">&quot;bodysize&quot;</span>, <span class="dt">drop=</span>F])</span>
+<span id="cb101-2"><a href="#cb101-2"></a>dissim.carnivory&lt;-<span class="kw">gowdis</span>(tall[, <span class="st">&quot;carnivory&quot;</span>, <span class="dt">drop=</span>F])</span>
+<span id="cb101-3"><a href="#cb101-3"></a>dissim.colour&lt;-<span class="kw">gowdis</span>(tall[, <span class="dv">3</span><span class="op">:</span><span class="dv">5</span>])<span class="op">/</span><span class="kw">max</span>(<span class="kw">gowdis</span>(tall[, <span class="dv">3</span><span class="op">:</span><span class="dv">5</span>]))</span>
+<span id="cb101-4"><a href="#cb101-4"></a>dall&lt;-<span class="kw">list</span>(<span class="kw">as.matrix</span>(dissim.bodysize), <span class="kw">as.matrix</span>(dissim.carnivory), <span class="kw">as.matrix</span>(dissim.colour))</span>
+<span id="cb101-5"><a href="#cb101-5"></a>mean.dissim.all&lt;-<span class="kw">as.dist</span>(<span class="kw">apply</span>(<span class="kw">simplify2array</span>(dall), <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), mean, <span class="dt">na.rm=</span>T), <span class="dv">2</span>)</span>
+<span id="cb101-6"><a href="#cb101-6"></a><span class="kw">round</span>(mean.dissim.all, <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##       sp1   sp2   sp3   sp4   sp5   sp6   sp7
+## sp1 0.000                                    
+## sp2 0.389 0.000                              
+## sp3 0.611 0.722 0.000                        
+## sp4 0.500 0.444 0.556 0.000                  
+## sp5 0.822 0.733 0.211 0.556 0.000            
+## sp6 0.500 0.000 1.000 0.500 0.850 0.000      
+## sp7 0.667 0.944 0.389 0.833 0.378 1.000 0.000</code></pre>
+<p>This is all a bit time consuming to do it line by line. There is other function in the package ‘ade4’, i.e. the function <code>dist.ktab</code> (together with the associated functions <code>prep.fuzzy</code> and <code>ktab.list.df</code>). However this solution is quite time consuming as well, as it requires a number steps and coding lines (you can surely try, just in case). Ideally we can thus also solve this problem with the function <code>gawdis</code>, possibly in a simple way. The solution is obtained by defining all columns belonging to a given trait (like colors above) to a certain group, as we saw above and then setting the argument fuzzy=TRUE. Let’s see this now.</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1"></a><span class="kw">gawdis</span>(tall, <span class="dt">w.type=</span><span class="st">&quot;equal&quot;</span>, <span class="dt">groups =</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>), <span class="dt">fuzzy=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;Running w.type=equal on groups=c(1,2,3,3,3)&quot;
+## [1] &quot;Running w.type=equal on groups=c(1)&quot;
+## [1] &quot;Running w.type=equal on groups=c(2)&quot;
+## [1] &quot;Running w.type=equal on groups=c(3,3,3)&quot;</code></pre>
+<pre><code>##           sp1       sp2       sp3       sp4       sp5       sp6
+## sp2 0.3888889                                                  
+## sp3 0.6111111 0.7222222                                        
+## sp4 0.5000000 0.4444444 0.5555556                              
+## sp5 0.8222222 0.7333333 0.2111111 0.5555556                    
+## sp6 0.5000000 0.0000000 1.0000000 0.5000000 0.8500000          
+## sp7 0.6666667 0.9444444 0.3888889 0.8333333 0.3777778 1.0000000</code></pre>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
