@@ -142,5 +142,5 @@ mean.dissim.all<-as.dist(apply(simplify2array(dall), c(1, 2), mean, na.rm=T), 2)
 round(mean.dissim.all, 3)
 
 ## -----------------------------------------------------------------------------
-gawdis(tall, w.type="equal", groups =c(1, 2, 3, 3, 3), fuzzy=TRUE)
+gawdis(tall, w.type="equal", groups =c(1, 1, 2, 2, 2), fuzzy=c(2))
 
