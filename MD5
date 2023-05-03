@@ -1,13 +1,13 @@
-f513dfdd346179dab3e3ddd86fc5c05b *DESCRIPTION
+d0d8b827efd6841d9a313e63c920d34b *DESCRIPTION
 d60bd57dc94230fa387163955290b27a *NAMESPACE
 12b3f4ee6a8aa08ff482abcb632a5750 *R/GAgawdis.R
-fcad8ce1ab08a638a623fa19a5827b19 *R/gawdis.R
+cdf00f9afd3878a6e0ab6b077643ea2e *R/gawdis.R
 58fdb1710ca00d04995366c524cbf906 *README.md
 cfae757c620c480a942ffc2a8de7157a *build/vignette.rds
 de6fdea7eb3ebed77a874a41a9923219 *inst/CITATION
 d131e07c5ea6baca392aedf56e8a04a7 *inst/doc/gawdis.R
 721db7fffc4894dcdfc7a5578d1d5d84 *inst/doc/gawdis.Rmd
-5e8c7902eb93c0af305f52f9d92920a4 *inst/doc/gawdis.html
+4f3f674264060a2f48e031d922625fdc *inst/doc/gawdis.html
 6d37cc8f87fa8cdf83ab65f2a0b5807a *man/GAgawdis.Rd
 eb5412e550739110974734c42880b870 *man/gawdis.Rd
 721db7fffc4894dcdfc7a5578d1d5d84 *vignettes/gawdis.Rmd
